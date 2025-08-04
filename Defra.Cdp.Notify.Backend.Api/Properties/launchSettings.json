@@ -1,0 +1,25 @@
+﻿{
+  "profiles": {
+    "Defra.Cdp.Notify.Backend.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:3057",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Stubbed": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://+:3057",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Docker__RegistryUrl": "http://localhost:3939",
+        "Mongo__DatabaseUri": "mongodb://127.0.0.1:27017"
+      }
+    }
+
+  }
+}
