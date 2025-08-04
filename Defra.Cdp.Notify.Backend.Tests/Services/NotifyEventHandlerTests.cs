@@ -23,6 +23,7 @@ public class NotifyEventHandlerTests
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Test,
             "TestService",
             GrafanaAlertStatus.firing,
@@ -62,6 +63,7 @@ public class NotifyEventHandlerTests
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Test,
             "Test event",
             GrafanaAlertStatus.resolved,
@@ -101,6 +103,7 @@ public class NotifyEventHandlerTests
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Test,
             "TestService",
             GrafanaAlertStatus.firing,

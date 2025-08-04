@@ -11,6 +11,9 @@ public interface ITeamsService
     Task<List<Team>> GetAllTeams(CancellationToken cancellationToken);
     Task PersistAll(HashSet<string> allTeamNames, CancellationToken cancellationToken);
     Task<List<Team>> GetTeams(List<string>? teamNames, CancellationToken cancellationToken);
+
+    Task UpdateTeam(string teamName, string slackChannel, List<string> alertEmailAddresses,
+        CancellationToken cancellationToken);
 }
 
 public class TeamsService(IMongoDbClientFactory connectionFactory, ILoggerFactory loggerFactory)
@@ -54,7 +57,7 @@ public class TeamsService(IMongoDbClientFactory connectionFactory, ILoggerFactor
         {
             await Collection.InsertManyAsync(newTeams, cancellationToken: cancellationToken);
         }
-        
+
         var orphanedTeamNames = existingTeamNames.Except(allTeamNames).ToList();
 
         if (orphanedTeamNames.Count != 0)
@@ -71,14 +74,26 @@ public class TeamsService(IMongoDbClientFactory connectionFactory, ILoggerFactor
         {
             filter = Builders<Team>.Filter.Empty;
         }
-        
+
         return await Collection.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    public async Task UpdateTeam(string teamName, string slackChannel, List<string> alertEmailAddresses,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<Team>.Filter.Eq(t => t.Name, teamName);
+        var update = Builders<Team>.Update
+            .Set(t => t.SlackChannel, slackChannel)
+            .Set(t => t.AlertEmailAddresses, alertEmailAddresses);
+
+        await Collection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
     }
 }
 
 [BsonIgnoreExtraElements]
 public record Team(
-    [property: JsonPropertyName("teamName")] string Name,
+    [property: JsonPropertyName("teamName")]
+    string Name,
     [property: JsonPropertyName("alertEmailAddresses")]
     List<string> AlertEmailAddresses,
     [property: JsonPropertyName("slackChannel")]

@@ -9,9 +9,10 @@ public class GithubEventAlert : IAlert
     [property: JsonPropertyName("repository")] public required Repository Repository { get; set; }
     [property: JsonPropertyName("workflow_run")] public required WorkflowRun WorkflowRun { get; set; }
 
-    public GithubNotifyEvent ToNotifyEvent()
+    public GithubNotifyEvent ToNotifyEvent(string awsMessageId)
     {
         return new GithubNotifyEvent(
+            awsMessageId,
             Repository.Name,
             WorkflowRun.Name,
             WorkflowRun.Conclusion, 

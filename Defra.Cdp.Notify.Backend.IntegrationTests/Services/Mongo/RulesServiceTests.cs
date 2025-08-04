@@ -24,6 +24,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Test,
             "TestService",
             GrafanaAlertStatus.firing,
@@ -53,6 +54,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Prod,
             "TestService",
             GrafanaAlertStatus.firing,
@@ -82,6 +84,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Test,
             "TestService",
             GrafanaAlertStatus.firing,
@@ -112,6 +115,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GrafanaNotifyEvent
         (
+            "123",
             Environment.Dev,
             "TestService",
             GrafanaAlertStatus.firing,
@@ -142,6 +146,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GithubNotifyEvent
         (
+            "123",
             "TestService",
             "Create Workflow",
             "success",
@@ -170,6 +175,7 @@ public class RulesServiceTests(MongoIntegrationTest fixture) : ServiceTest(fixtu
 
         var notifyEvent = new GithubNotifyEvent
         (
+            "123",
             "AnotherService",
             "Create Workflow",
             "success",

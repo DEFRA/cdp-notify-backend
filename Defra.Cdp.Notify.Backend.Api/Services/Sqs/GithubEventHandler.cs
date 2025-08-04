@@ -42,6 +42,6 @@ public class GithubEventHandler(
             return null;
         }
 
-        return alert.ToNotifyEvent();
+        return alert.ToNotifyEvent(message.MessageId);
     }
 }

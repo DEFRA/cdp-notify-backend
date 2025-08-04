@@ -23,10 +23,8 @@ public class NotifyEventHandler(
     {
         var alertRule = notifyEvent switch
         {
-            GrafanaNotifyEvent grafanaEvent => await rulesService.GetAlertRuleForGrafanaEvent(grafanaEvent,
-                cancellationToken),
-            GithubNotifyEvent githubEvent => await rulesService.GetAlertRuleForGithubEvent(githubEvent,
-                cancellationToken),
+            GrafanaNotifyEvent grafanaEvent => await rulesService.GetAlertRuleForGrafanaEvent(grafanaEvent, cancellationToken),
+            GithubNotifyEvent githubEvent => await rulesService.GetAlertRuleForGithubEvent(githubEvent, cancellationToken),
             _ => throw new ArgumentException("Unsupported notify event type", nameof(notifyEvent))
         };
 
