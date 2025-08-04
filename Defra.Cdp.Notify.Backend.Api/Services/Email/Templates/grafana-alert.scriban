@@ -1,0 +1,25 @@
+{{~ content ~}}
+<blockquote style="border-left: 10px solid {{ statusColour }}; padding-left: 15px;">
+  <p>Grafana alert {{ status }} for {{ service }} in {{ environment }}</p>
+  <p>{{ alertName }}</p>
+</blockquote>
+
+{{ if startsAt }}
+<p>Triggered on {{ startsAt | date.format "yyyy-MM-dd HH:mm:ss" }}</p>
+{{ end }}
+
+{{ if endsAt }}
+<p>Resolved on {{ endsAt | date.format "yyyy-MM-dd HH:mm:ss" }}</p>
+{{ end }}
+
+<h3>Service</h3>
+<p>{{ service }}</p>
+
+<h3>Alert Name</h3>
+<p>{{ alertName }}</p>
+
+<h3>Summary</h3>
+<p>{{ summary }}</p>
+
+<h3>Alert URL</h3>
+<p><a href="{{ alertURL }}">{{ alertURL }}</a></p>
