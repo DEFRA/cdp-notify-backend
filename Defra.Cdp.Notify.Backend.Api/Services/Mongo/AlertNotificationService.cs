@@ -25,5 +25,11 @@ public class AlertNotificationService(IMongoDbClientFactory connectionFactory, I
     {
         await Collection.InsertOneAsync(notification, cancellationToken: cancellationToken);
     }
+    
+    public async Task<AlertNotification> GetNotificationByAwsMessageId(string id, CancellationToken cancellationToken)
+    {
+        var filter = Builders<AlertNotification>.Filter.Eq(n => n.NotifyEvent.AwsMessageId, id);
+        return await Collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+    }
 
 }

@@ -31,6 +31,6 @@ public class GrafanaAlertHandler(
             return null;
         }
 
-        return alert.ToNotifyEvent();
+        return alert.ToNotifyEvent(message.MessageId);
     }
 }

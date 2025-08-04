@@ -5,6 +5,7 @@ namespace Defra.Cdp.Notify.Backend.Api.Models;
 [BsonDiscriminator]
 [BsonKnownTypes(typeof(GithubNotifyEvent), typeof(GrafanaNotifyEvent))]
 public abstract record NotifyEvent(
+    string AwsMessageId,
     Source Source,
     string Service,
     string Status)
@@ -13,6 +14,7 @@ public abstract record NotifyEvent(
 }
 
 public record GithubNotifyEvent(
+    string AwsMessageId,
     string Service,
     string WorkflowName,
     string Conclusion,
@@ -20,7 +22,7 @@ public record GithubNotifyEvent(
     long RunNumber,
     string CommitMessage,
     string Author) :
-    NotifyEvent(Source.Github, Service, Conclusion)
+    NotifyEvent(AwsMessageId, Source.Github, Service, Conclusion)
 {
     public override string DedupKey()
     {
@@ -29,6 +31,7 @@ public record GithubNotifyEvent(
 }
 
 public record GrafanaNotifyEvent(
+    string AwsMessageId,
     Environment Environment,
     string Service,
     GrafanaAlertStatus GrafanaStatus,
@@ -38,7 +41,7 @@ public record GrafanaNotifyEvent(
     DateTime StartsAt,
     DateTime? EndsAt,
     bool PagerDuty) :
-    NotifyEvent(Source.Grafana, Service, GrafanaStatus.ToString())
+    NotifyEvent(AwsMessageId, Source.Grafana, Service, GrafanaStatus.ToString())
 {
     public override string DedupKey()
     {

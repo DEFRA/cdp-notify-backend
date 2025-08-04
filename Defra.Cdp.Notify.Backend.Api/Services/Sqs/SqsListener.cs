@@ -69,13 +69,19 @@ public abstract class SqsListener(IAmazonSQS sqs, ISqsMessageHandler messageHand
 
                 falloff = 1;
             }
+            
+            catch (OperationCanceledException)
+            {
+                logger.LogInformation("SQS listener cancelled/stopped for {Queue}.", queueUrl);
+                break; // <- exit cleanly on cancel
+            }
             catch (Exception e)
             {
                 logger.LogError(e, "Error reading from SQS queue {Queue}", queueUrl);
                 falloff++;
                 if (falloff <= 10) continue;
                 logger.LogCritical("Failed to read from SQS queue {Queue} after multiple attempts", queueUrl);
-                throw new Exception($"Failed to read from SQS queue {queueUrl} after multiple attempts", e);
+                // throw new Exception($"Failed to read from SQS queue {queueUrl} after multiple attempts", e);
             }
     }
 }

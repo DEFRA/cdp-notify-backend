@@ -15,9 +15,9 @@ public class GrafanaEventAlert : IAlert
     [property: JsonPropertyName("summary")] public required string Summary { get; set; }
     [JsonConverter(typeof(StringToNullableBoolConverter))][property: JsonPropertyName("pagerDuty")] public bool? PagerDuty { get; set; }
 
-    public NotifyEvent ToNotifyEvent()
+    public NotifyEvent ToNotifyEvent(string awsMessageId)
     {
-        return new GrafanaNotifyEvent(Environment, Service!, Status, AlertName, Summary, AlertUrl, StartsAt, EndsAt, PagerDuty ?? false);
+        return new GrafanaNotifyEvent(awsMessageId, Environment, Service!, Status, AlertName, Summary, AlertUrl, StartsAt, EndsAt, PagerDuty ?? false);
     }
 }
 
