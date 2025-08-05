@@ -32,7 +32,7 @@ public class PagerDutyAlertHandler(
                 continue;
             }
             var alert = pagerDutyAlertBuilder.BuildPagerDutyAlert(alertNotification, teamNames, Severity.Critical);
-            await pagerDutyClient.SendAlert(integrationKey, alert);
+            await pagerDutyClient.SendAlert(integrationKey, alert, cancellationToken);
         }
     }
 }

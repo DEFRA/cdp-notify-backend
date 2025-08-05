@@ -39,7 +39,8 @@ public class SlackAlertHandler(
                     _ => throw new ArgumentException("Unsupported notify event type: " + nameof(alertNotification.NotifyEvent))
                 };
                 await snsPublisher.Publish(slackHandlerConfig.Value.TopicArn, JsonSerializer.Serialize(message),
-                    _environment);
+                    _environment,
+                    cancellationToken);
             }
             else
             {

@@ -1,6 +1,5 @@
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Defra.Cdp.Notify.Backend.Api.Models;
 
 namespace Defra.Cdp.Notify.Backend.Api.Services.Sqs;
 
@@ -51,29 +50,18 @@ public abstract class SqsListener(IAmazonSQS sqs, ISqsMessageHandler messageHand
 
                 foreach (var message in receiveMessageResponse.Messages)
                 {
-                    try
-                    {
-                        await messageHandler.HandleMessage(message, cancellationToken);
-                    }
-                    catch (Exception exception)
-                    {
-                        logger.LogError("Message: {Id} - Exception: {Message}", message.MessageId, exception.Message);
-                    }
+                    await HandleMessage(message, cancellationToken);
 
-                    var deleteRequest = new DeleteMessageRequest
-                    {
-                        QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle
-                    };
-                    await sqs.DeleteMessageAsync(deleteRequest, cancellationToken);
+                    await DeleteMessage(message, cancellationToken);
                 }
 
                 falloff = 1;
             }
             
-            catch (OperationCanceledException)
+            catch (OperationCanceledException e)
             {
-                logger.LogInformation("SQS listener cancelled/stopped for {Queue}.", queueUrl);
-                break; // <- exit cleanly on cancel
+                logger.LogInformation(e, "SQS listener cancelled/stopped for {Queue}.", queueUrl);
+                break;
             }
             catch (Exception e)
             {
@@ -81,7 +69,28 @@ public abstract class SqsListener(IAmazonSQS sqs, ISqsMessageHandler messageHand
                 falloff++;
                 if (falloff <= 10) continue;
                 logger.LogCritical("Failed to read from SQS queue {Queue} after multiple attempts", queueUrl);
-                // throw new Exception($"Failed to read from SQS queue {queueUrl} after multiple attempts", e);
+                throw new IOException($"Failed to read from SQS queue {queueUrl} after multiple attempts", e);
             }
+    }
+
+    private async Task DeleteMessage(Message message, CancellationToken cancellationToken)
+    {
+        var deleteRequest = new DeleteMessageRequest
+        {
+            QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle
+        };
+        await sqs.DeleteMessageAsync(deleteRequest, cancellationToken);
+    }
+
+    private async Task HandleMessage(Message message, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await messageHandler.HandleMessage(message, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Message: {Id} - Exception: {Message}", message.MessageId, exception.Message);
+        }
     }
 }

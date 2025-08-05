@@ -46,7 +46,7 @@ public class PagerDutyAlertBuilder : IPagerDutyAlertBuilder
     {
         var input = notifyEvent.DedupKey();
         var inputBytes = Encoding.UTF8.GetBytes(input);
-        var hashBytes = MD5.HashData(inputBytes);
+        var hashBytes = SHA256.HashData(inputBytes);
         return Convert.ToHexString(hashBytes).ToLowerInvariant();
     }
 }

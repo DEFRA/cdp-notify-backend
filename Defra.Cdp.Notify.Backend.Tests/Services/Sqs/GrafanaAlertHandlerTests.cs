@@ -15,7 +15,7 @@ public class GrafanaAlertHandlerTests
     {
         var sqsMessageService = Substitute.For<ISqsMessageService>();
         var notifyEventHandler = Substitute.For<INotifyEventHandler>();
-        var logger = Substitute.For<ILogger<GrafanaAlertListener>>();
+        var logger = Substitute.For<ILogger<GrafanaAlertHandler>>();
 
         var message = new Message
         {
