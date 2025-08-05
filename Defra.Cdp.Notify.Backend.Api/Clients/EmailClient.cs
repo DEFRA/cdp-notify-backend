@@ -13,16 +13,25 @@ public interface IEmailClient
     void SendEmail(Email emailContent, CancellationToken cancellationToken);
 }
 
-public class EmailClient(IOptions<EmailClientConfig> mailClientConfig, ILogger<EmailClient> logger)
+public class EmailClient(
+    IOptions<EmailClientConfig> mailClientConfig,
+    IPortalBackendClient portalBackendClient,
+    ILogger<EmailClient> logger)
     : IEmailClient
 {
     public async void SendEmail(Email emailContent, CancellationToken cancellationToken)
     {
+        if (await portalBackendClient.IsFeatureToggleActive("disable-notify-publish", cancellationToken))
+        {
+            logger.LogInformation("Feature toggle 'disable-notify-publish' is active, skipping sending email.");
+            return;
+        }
+
         try
         {
             var credential = new DefaultAzureCredential();
             logger.LogInformation("Sending email: {EmailContent}", emailContent);
-            logger.LogInformation("Base Url: {baseurl}", mailClientConfig.Value.BaseUrl);
+            logger.LogInformation("Base Url: {Baseurl}", mailClientConfig.Value.BaseUrl);
 
             var graphClient = new GraphServiceClient(credential, ["https://graph.microsoft.com/.default"],
                 mailClientConfig.Value.BaseUrl);
@@ -49,7 +58,7 @@ public class EmailClient(IOptions<EmailClientConfig> mailClientConfig, ILogger<E
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error sending email: {message}", e.Message);
+            logger.LogError(e, "Error sending email: {Message}", e.Message);
         }
     }
 }

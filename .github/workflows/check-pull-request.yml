@@ -12,7 +12,7 @@ on:
       - ready_for_review
 
 jobs:
-  pr-validator:
+  check-pull-request:
     name: Run Pull Request Checks
     runs-on: ubuntu-latest
     steps:
@@ -27,5 +27,5 @@ jobs:
   sonarcloud-scan:
     name: CDP SonarCloud Scan
     uses: ./.github/workflows/sonarcloud.yml
-    needs: pr-validator
+    needs: check-pull-request
     secrets: inherit

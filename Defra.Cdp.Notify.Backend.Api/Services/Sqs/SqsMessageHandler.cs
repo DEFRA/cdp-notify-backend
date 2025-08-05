@@ -35,7 +35,7 @@ public abstract class SqsMessageHandler<TType>(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to save {Source} message ${messageId} - {Error}:\n {body}",
+            logger.LogError(ex, "Failed to save {Source} message ${MessageId} - {Error}:\n {Body}",
                 source, message.MessageId,
                 ex.Message, message.Body);
         }
@@ -54,7 +54,7 @@ public abstract class SqsMessageHandler<TType>(
         }
         catch (JsonException ex)
         {
-            logger.LogError("Failed to deserialize message {MessageId} - {Error}:\n {body}",
+            logger.LogError(ex, "Failed to deserialize message {MessageId} - {Error}:\n {Body}",
                 message.MessageId, ex.Message, message.Body);
         }
         catch (Exception ex)

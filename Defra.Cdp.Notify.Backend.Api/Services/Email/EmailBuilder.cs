@@ -22,7 +22,7 @@ public class EmailBuilder : IEmailBuilder
     }
 
 
-    private Email BuildGrafanaEmail(GrafanaNotifyEvent notifyEvent, HashSet<string> emailAddresses)
+    private static Email BuildGrafanaEmail(GrafanaNotifyEvent notifyEvent, HashSet<string> emailAddresses)
     {
         var layout = Template.Parse(File.ReadAllText("Services/Email/Templates/Layouts/email.scriban"));
         var content = Template.Parse(File.ReadAllText("Services/Email/Templates/grafana-alert.scriban"));
@@ -55,7 +55,7 @@ public class EmailBuilder : IEmailBuilder
         return new Email(subject, full, emailAddresses);
     }
     
-    private Email BuildGithubEmail(GithubNotifyEvent notifyEvent, HashSet<string> emailAddresses)
+    private static Email BuildGithubEmail(GithubNotifyEvent notifyEvent, HashSet<string> emailAddresses)
     {
         throw new NotImplementedException();
     }

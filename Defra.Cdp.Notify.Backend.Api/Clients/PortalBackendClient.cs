@@ -11,6 +11,7 @@ namespace Defra.Cdp.Notify.Backend.Api.Clients;
 public interface IPortalBackendClient
 {
     Task<List<Entity>> GetEntities(CancellationToken cancellationToken);
+    Task<bool> IsFeatureToggleActive(string toggleId, CancellationToken cancellationToken);
 }
 
 public class PortalBackendClient : IPortalBackendClient
@@ -28,13 +29,26 @@ public class PortalBackendClient : IPortalBackendClient
 
     public async Task<List<Entity>> GetEntities(CancellationToken cancellationToken)
     {
-        var result = await _client.GetAsync(_baseUrl + $"/entities?status=Created", cancellationToken);
+        var result = await _client.GetAsync(_baseUrl + "/entities?status=Created", cancellationToken);
         result.EnsureSuccessStatusCode();
         var response = await result.Content.ReadAsStreamAsync(cancellationToken);
         return await JsonSerializer.DeserializeAsync<List<Entity>>(response, cancellationToken: cancellationToken) ?? throw new InvalidOperationException();
     }
+
+    public async Task<bool> IsFeatureToggleActive(string toggleId, CancellationToken cancellationToken)
+    {
+        var result = await _client.GetAsync(_baseUrl + $"/feature-toggles?id={toggleId}", cancellationToken);
+        if (!result.IsSuccessStatusCode) return false;
+        var response = await result.Content.ReadAsStreamAsync(cancellationToken);
+        return (await JsonSerializer.DeserializeAsync<FeatureToggle>(response, cancellationToken: cancellationToken))?.Active ?? false;
+
+    }
 }
 
+[BsonIgnoreExtraElements]
+public record FeatureToggle(
+    [property: JsonPropertyName("active")] bool Active
+);
 
 [BsonIgnoreExtraElements]
 public record  Entity(

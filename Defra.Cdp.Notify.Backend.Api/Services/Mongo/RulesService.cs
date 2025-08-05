@@ -21,7 +21,14 @@ public class RulesService(IMongoDbClientFactory connectionFactory, ILoggerFactor
 
     protected override List<CreateIndexModel<AlertRule>> DefineIndexes(IndexKeysDefinitionBuilder<AlertRule> builder)
     {
-        return [];
+        var keys = builder.Ascending(r => r.Source)
+            .Ascending(r => r.Environment)
+            .Ascending(r => r.Service)
+            .Ascending(r => r.PagerDuty);
+
+        var index = new CreateIndexModel<AlertRule>(keys, new CreateIndexOptions { Unique = true });
+
+        return [index];
     }
 
     public async Task<List<AlertRule>> GetAlertRules(CancellationToken cancellationToken)
@@ -109,7 +116,7 @@ public class RulesService(IMongoDbClientFactory connectionFactory, ILoggerFactor
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Failed to insert {alertRule}", alertRule);
+            Logger.LogError(e, "Failed to insert {AlertRule}", alertRule);
             return false;
         }
     }

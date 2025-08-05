@@ -44,7 +44,7 @@ public class TeamOverridesService(IMongoDbClientFactory connectionFactory, ILogg
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Failed to insert {teamOverride}", teamOverride);
+            Logger.LogError(e, "Failed to insert {TeamOverride}", teamOverride);
             return false;
         }
     }

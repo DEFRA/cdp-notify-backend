@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Defra.Cdp.Notify.Backend.IntegrationTests.Services;
 using Xunit;
 
@@ -13,10 +12,5 @@ public abstract class ServiceTest : IClassFixture<MongoIntegrationTest>
         Fixture = fixture;
 
         Task.Run(() => Fixture.InitializeAsync()).Wait();
-    }
-
-    protected T FromJson<T>(string json)
-    {
-        return (T)JsonSerializer.Deserialize(json, typeof(T))!;
     }
 }
