@@ -26,6 +26,11 @@ public class PagerDutyAlertHandler(
         foreach (var team in teamNames)
         {
             var integrationKey = await secretsService.PagerDutyIntegrationKey(team, cancellationToken);
+            if (integrationKey == null)
+            {
+                logger.LogInformation("No integration key for team {Team}, skipping PagerDuty alert", team);
+                continue;
+            }
             var alert = pagerDutyAlertBuilder.BuildPagerDutyAlert(alertNotification, teamNames, Severity.Critical);
             await pagerDutyClient.SendAlert(integrationKey, alert);
         }

@@ -10,7 +10,7 @@ public interface IGrafanaAlertHandler : ISqsMessageHandler;
 public class GrafanaAlertHandler(
     INotifyEventHandler notifyEventHandler,
     ISqsMessageService sqsMessageService,
-    ILogger<GrafanaAlertListener> logger
+    ILogger<GrafanaAlertHandler> logger
 ) : SqsMessageHandler<GrafanaEventAlert>(Source.Grafana, sqsMessageService, notifyEventHandler, logger), IGrafanaAlertHandler
 {
     protected override NotifyEvent? AlertToNotifyEvent(GrafanaEventAlert alert, Message message)
