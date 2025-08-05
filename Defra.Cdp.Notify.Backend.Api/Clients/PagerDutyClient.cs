@@ -1,7 +1,4 @@
-using System.Security.Cryptography;
-using System.Text;
 using Defra.Cdp.Notify.Backend.Api.Config;
-using Defra.Cdp.Notify.Backend.Api.Models;
 using Microsoft.Extensions.Options;
 using Pager.Duty;
 using Pager.Duty.Requests;

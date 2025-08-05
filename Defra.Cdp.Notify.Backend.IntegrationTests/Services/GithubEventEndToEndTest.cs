@@ -20,7 +20,7 @@ using Xunit;
 
 namespace Defra.Cdp.Notify.Backend.IntegrationTests.Services;
 
-public class GithubEventIntegrationTest(MongoIntegrationTest fixture) : ServiceTest(fixture)
+public class GithubEventEndToEndTest(MongoIntegrationTest fixture) : ServiceTest(fixture)
 {
     [Fact]
     public async Task FailingWorkflowRunTriggerSlackMessage()
@@ -28,7 +28,7 @@ public class GithubEventIntegrationTest(MongoIntegrationTest fixture) : ServiceT
         var mongoConfig = Substitute.For<IOptions<MongoConfig>>();
         mongoConfig.Value.Returns(new MongoConfig
         {
-            DatabaseName = "GithubEventIntegrationTest", DatabaseUri = Fixture.ConnectionString
+            DatabaseName = "GithubEventEndToEndTest", DatabaseUri = Fixture.ConnectionString
         });
         var mongoFactory = new MongoDbClientFactory(mongoConfig);
 
@@ -153,11 +153,10 @@ public class GithubEventIntegrationTest(MongoIntegrationTest fixture) : ServiceT
         Assert.Equal("1", storedAlertNotification.NotifyEvent.AwsMessageId);
         Assert.Equal(AlertMethod.Slack, storedAlertNotification.AlertRule.Methods[0]);
 
-        sqs.Received().ReceiveMessageAsync(Arg.Is<ReceiveMessageRequest>(r => r.QueueUrl == sqsQueueUrl),
+        await sqs.Received().ReceiveMessageAsync(Arg.Is<ReceiveMessageRequest>(r => r.QueueUrl == sqsQueueUrl),
             Arg.Any<CancellationToken>());
-        snsPublisher.Received(1)
+        await snsPublisher.Received(1)
             .Publish(testSlackArn, Arg.Is<string>(s => s.Contains("test-slack-channel")), "local");
-        
         
         listener.Dispose();
     }
