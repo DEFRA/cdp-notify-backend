@@ -23,7 +23,10 @@ public class TeamsService(IMongoDbClientFactory connectionFactory, ILoggerFactor
 
     protected override List<CreateIndexModel<Team>> DefineIndexes(IndexKeysDefinitionBuilder<Team> builder)
     {
-        return [];
+        return
+        [
+            new CreateIndexModel<Team>(builder.Ascending(x => x.Name), new CreateIndexOptions { Unique = true })
+        ];
     }
 
     public async Task<List<Team>> GetAllTeams(CancellationToken cancellationToken)

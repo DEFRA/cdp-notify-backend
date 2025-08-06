@@ -18,7 +18,10 @@ public class EntitiesService(IMongoDbClientFactory connectionFactory, ILoggerFac
 
     protected override List<CreateIndexModel<Entity>> DefineIndexes(IndexKeysDefinitionBuilder<Entity> builder)
     {
-        return [];
+        return
+        [
+            new CreateIndexModel<Entity>(builder.Ascending(e => e.Name), new CreateIndexOptions { Unique = true })
+        ];
     }
 
     public async Task<List<Entity>> GetEntities()
@@ -40,13 +43,10 @@ public class EntitiesService(IMongoDbClientFactory connectionFactory, ILoggerFac
         var writes = entities.Select(entity =>
             new ReplaceOneModel<Entity>(
                 Builders<Entity>.Filter.Eq(e => e.Name, entity.Name),
-                entity)
-            {
-                IsUpsert = true
-            }).ToList();
+                entity) { IsUpsert = true }).ToList();
 
         await Collection.BulkWriteAsync(writes, cancellationToken: cancellationToken);
-        
+
         var names = entities.Select(e => e.Name).ToList();
         var deleteFilter = Builders<Entity>.Filter.Nin(e => e.Name, names);
         await Collection.DeleteManyAsync(deleteFilter, cancellationToken);

@@ -8,9 +8,7 @@ public interface IRulesService
 {
     Task<AlertRule?> GetAlertRuleForGrafanaEvent(GrafanaNotifyEvent notifyEvent, CancellationToken cancellationToken);
     Task<AlertRule?> GetAlertRuleForGithubEvent(GithubNotifyEvent notifyEvent, CancellationToken cancellationToken);
-
     Task<List<AlertRule>> GetAlertRules(CancellationToken cancellationToken);
-
     Task<bool> PersistRule(AlertRule alertRule, CancellationToken cancellationToken);
 }
 

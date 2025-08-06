@@ -18,9 +18,14 @@ public class TeamOverridesService(IMongoDbClientFactory connectionFactory, ILogg
 {
     private const string CollectionName = "teamoverrides";
 
-    protected override List<CreateIndexModel<TeamOverride>> DefineIndexes(IndexKeysDefinitionBuilder<TeamOverride> builder)
+    protected override List<CreateIndexModel<TeamOverride>> DefineIndexes(
+        IndexKeysDefinitionBuilder<TeamOverride> builder)
     {
-        return [];
+        return
+        [
+            new CreateIndexModel<TeamOverride>(builder.Ascending(t => t.Service),
+                new CreateIndexOptions { Unique = true })
+        ];
     }
 
     public async Task<List<TeamOverride>> GetOverrides()
