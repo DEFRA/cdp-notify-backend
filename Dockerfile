@@ -19,10 +19,10 @@ COPY . .
 WORKDIR "/src"
 
 # unit test and code coverage
-RUN dotnet test CdpNotifyBackend.Test
+RUN dotnet test
 
 FROM build AS publish
-RUN dotnet publish CdpNotifyBackend -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish Defra.Cdp.Notify.Backend -c Release -o /app/publish /p:UseAppHost=false
 
 
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
@@ -32,4 +32,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 8085
-ENTRYPOINT ["dotnet", "CdpNotifyBackend.dll"]
+ENTRYPOINT ["dotnet", "Defra.Cdp.Notify.Backend.Api.dll"]
