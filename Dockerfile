@@ -16,13 +16,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY . .
-WORKDIR "/src"
-
-# unit test and code coverage
-RUN dotnet test
+WORKDIR "/src/Defra.Cdp.Notify.Backend.Api"
 
 FROM build AS publish
-RUN dotnet publish Defra.Cdp.Notify.Backend -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Defra.Cdp.Notify.Backend.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
